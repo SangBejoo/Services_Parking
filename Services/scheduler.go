@@ -4,22 +4,26 @@ import (
     "time"
 
     gron "github.com/roylee0704/gron"
-    api "github.com/SangBejoo/service-parking/Api"
+    "github.com/SangBejoo/service-parking/models"
+    "github.com/SangBejoo/service-parking/api"
 )
 
 type Scheduler struct {
-    spatialMap *SpatialMap
-    graph      *gron.Gron
+    graph      *gron.Cron
 }
 
-func (s *Scheduler) updateLocations(vehicles []api.Vehicle) {
+func (s *Scheduler) updateLocations(vehicles []models.Vehicle) {
     // Add logic to update locations of vehicles
 }
 
 func (s *Scheduler) Start() {
-    s.graph.Add(gron.Every(5*time.Minute), func() {
+    s.graph.Add(gron.Every(5*time.Minute), gron.JobFunc(func() {
         vehicles := api.GetDummyVehicles()
-        s.updateLocations(vehicles)
-    })
+        var vehicleList []models.Vehicle
+        for _, v := range vehicles {
+            vehicleList = append(vehicleList, *v)
+        }
+        s.updateLocations(vehicleList)
+    }))
     s.graph.Start()
 }

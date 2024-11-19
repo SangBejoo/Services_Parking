@@ -497,6 +497,12 @@ func findPlace(longitude, latitude float64) (int, error) {
             continue
         }
 
+        // Check if coordinates are empty
+        if len(geometry.Coordinates) == 0 || len(geometry.Coordinates[0]) == 0 {
+            log.Printf("Skipping Place ID %d: Empty coordinates\n", placeID)
+            continue
+        }
+
         // Convert coordinates to orb.Ring
         var ring orb.Ring
         for _, coord := range geometry.Coordinates[0] {
